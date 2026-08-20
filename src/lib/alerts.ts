@@ -66,8 +66,8 @@ export function buildAlerts(input: {
       kind: "out_of_stock",
       severity: "critical",
       title: `${item.name} is out of stock`,
-      message: `AI: ${item.name} is at 0 ${item.unit}. Stop selling products that use it, and restock now so afternoon bookings are not delayed.`,
-      href: "/inventory?filter=low",
+      message: `AI: ${item.name} is at 0 ${item.unit}. Open Inventory or Suppliers, then tap WhatsApp restock — the message is already typed, you only click Send.`,
+      href: "/suppliers",
       createdAt: now,
       read: false,
     });
@@ -80,8 +80,8 @@ export function buildAlerts(input: {
       kind: "low_stock",
       severity: "warning",
       title: `${item.name} is running low`,
-      message: `AI: ${item.name} is ${item.currentQty}${item.unit} / min ${item.minimumQty}${item.unit}. Today's drink volume plus existing bookings will likely finish this stock. Restock before the next peak hour.`,
-      href: "/inventory?filter=low",
+      message: `AI: ${item.name} is ${item.currentQty}${item.unit} / min ${item.minimumQty}${item.unit}. Tap WhatsApp restock — the order message is already typed, you only click Send. Or copy the message.`,
+      href: "/suppliers",
       createdAt: now,
       read: false,
     });

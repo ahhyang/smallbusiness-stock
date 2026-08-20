@@ -89,6 +89,7 @@ export const inventoryItems = pgTable("inventory_items", {
   minimumQty: decimal("minimum_qty", { precision: 12, scale: 3 })
     .notNull()
     .default("0"),
+  supplierId: uuid("supplier_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -114,6 +115,18 @@ export const productIngredients = pgTable("product_ingredients", {
     .references(() => inventoryItems.id, { onDelete: "cascade" })
     .notNull(),
   quantity: decimal("quantity", { precision: 12, scale: 3 }).notNull(),
+});
+
+export const suppliers = pgTable("suppliers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  businessId: uuid("business_id")
+    .references(() => businesses.id, { onDelete: "cascade" })
+    .notNull(),
+  name: text("name").notNull(),
+  phone: text("phone"),
+  whatsapp: text("whatsapp"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const customers = pgTable("customers", {

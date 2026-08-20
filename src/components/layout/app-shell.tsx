@@ -18,6 +18,7 @@ import {
   X,
   Users,
   Plus,
+  Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -29,6 +30,7 @@ const navItems = [
   { href: "/orders", label: "Orders", icon: ShoppingBag },
   { href: "/bookings", label: "Bookings", icon: Calendar },
   { href: "/inventory", label: "Inventory", icon: Package },
+  { href: "/suppliers", label: "Suppliers", icon: Truck },
   { href: "/products", label: "Products", icon: Coffee },
   { href: "/customers", label: "Customers", icon: Users },
   { href: "/sales", label: "Sales", icon: BarChart3 },

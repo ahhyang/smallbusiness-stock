@@ -15,6 +15,7 @@ import {
   type DemoInventoryItem,
   type DemoOrder,
   type DemoProduct,
+  type DemoSupplier,
 } from "@/lib/demo-store";
 import {
   buildAlerts,
@@ -35,6 +36,7 @@ type StoreContextValue = {
   orders: DemoOrder[];
   bookings: DemoBooking[];
   customers: DemoStore["customers"];
+  suppliers: DemoSupplier[];
   branches: DemoStore["branches"];
   alerts: StoreAlert[];
   unreadCount: number;
@@ -49,6 +51,9 @@ type StoreContextValue = {
   updateOrderStatus: (orderId: string, status: DemoOrder["status"]) => void;
   stockIn: (data: Parameters<DemoStore["stockIn"]>[0]) => void;
   adjustStock: (data: Parameters<DemoStore["adjustStock"]>[0]) => void;
+  upsertSupplier: (data: Parameters<DemoStore["upsertSupplier"]>[0]) => void;
+  assignSupplier: (inventoryItemId: string, supplierId: string) => void;
+  assignSupplierByName: (itemName: string, supplierId: string) => void;
   todaySales: number;
   todayOrderCount: number;
   pendingCount: number;
@@ -74,6 +79,16 @@ function hydrateStore(): DemoStore {
     if (parsed.orders) store.orders = parsed.orders;
     if (parsed.bookings) store.bookings = parsed.bookings;
     if (parsed.transactions) store.transactions = parsed.transactions;
+    if (parsed.suppliers?.length) store.suppliers = parsed.suppliers;
+    if (parsed.inventory) {
+      const seed = new DemoStore();
+      for (const item of store.inventory) {
+        if (!item.supplierId) {
+          const match = seed.inventory.find((i) => i.name === item.name);
+          if (match?.supplierId) item.supplierId = match.supplierId;
+        }
+      }
+    }
   } catch {
     /* keep seed */
   }
@@ -90,6 +105,7 @@ function persistStore(store: DemoStore) {
       orders: store.orders,
       bookings: store.bookings,
       transactions: store.transactions,
+      suppliers: store.suppliers,
     }),
   );
 }
@@ -231,6 +247,7 @@ export function StoreProvider({
       ),
       bookings: filteredBookings,
       customers: store.customers,
+      suppliers: store.suppliers,
       branches: store.branches,
       alerts,
       unreadCount: alerts.filter((a) => !a.read).length,
@@ -311,6 +328,21 @@ export function StoreProvider({
           href: "/inventory",
           createdAt: new Date().toISOString(),
           read: false,
+        });
+      },
+      upsertSupplier: (data) => {
+        mutate((s) => {
+          s.upsertSupplier(data);
+        });
+      },
+      assignSupplier: (inventoryItemId, supplierId) => {
+        mutate((s) => {
+          s.assignSupplier(inventoryItemId, supplierId);
+        });
+      },
+      assignSupplierByName: (itemName, supplierId) => {
+        mutate((s) => {
+          s.assignSupplierByName(itemName, supplierId);
         });
       },
       todaySales: store.getTodaySales(branchId),

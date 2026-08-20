@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { useStore } from "@/components/store-provider";
+import { SupplierRestockActions } from "@/components/suppliers/restock-actions";
 
 export function DashboardClient() {
   const store = useStore();
@@ -188,8 +189,8 @@ export function DashboardClient() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Restock now</h2>
-            <Link href="/inventory?filter=low" className="text-sm text-emerald-700">
-              Inventory
+            <Link href="/suppliers" className="text-sm text-emerald-700">
+              Suppliers
             </Link>
           </div>
           <div className="mt-4 space-y-2">
@@ -197,16 +198,23 @@ export function DashboardClient() {
               <p className="text-sm text-slate-400">Stock levels are healthy.</p>
             )}
             {lowItems.slice(0, 6).map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between rounded-xl bg-amber-50 px-3 py-2 text-sm"
-              >
-                <span className="font-medium">{item.name}</span>
-                <span className="text-amber-700">
-                  {item.currentQty}
-                  {item.unit} / {item.minimumQty}
-                  {item.unit}
-                </span>
+              <div key={item.id} className="rounded-xl bg-amber-50 px-3 py-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium">{item.name}</span>
+                  <span className="text-amber-700">
+                    {item.currentQty}
+                    {item.unit} / {item.minimumQty}
+                    {item.unit}
+                  </span>
+                </div>
+                <SupplierRestockActions
+                  item={item}
+                  supplier={store.suppliers.find((s) => s.id === item.supplierId)}
+                  branchName={
+                    store.branches.find((b) => b.id === item.branchId)?.name
+                  }
+                  compact
+                />
               </div>
             ))}
           </div>

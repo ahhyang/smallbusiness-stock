@@ -14,6 +14,15 @@ export type DemoInventoryItem = {
   unit: string;
   currentQty: number;
   minimumQty: number;
+  supplierId?: string;
+};
+
+export type DemoSupplier = {
+  id: string;
+  name: string;
+  phone: string;
+  whatsapp: string;
+  notes?: string;
 };
 
 export type DemoProduct = {
@@ -108,17 +117,37 @@ const PRODUCT_IDS = {
   americano: "prod-americano",
 };
 
+const SUPPLIER_IDS = {
+  dairy: "sup-abc-dairy",
+  fruit: "sup-fresh-fruit",
+  pack: "sup-packaging-hub",
+  tea: "sup-tea-pearl",
+  coffee: "sup-coffee-import",
+};
+
+const ITEM_SUPPLIER: Record<string, string> = {
+  Mango: SUPPLIER_IDS.fruit,
+  Milk: SUPPLIER_IDS.dairy,
+  Sugar: SUPPLIER_IDS.tea,
+  Tea: SUPPLIER_IDS.tea,
+  Pearls: SUPPLIER_IDS.tea,
+  Ice: SUPPLIER_IDS.dairy,
+  Cup: SUPPLIER_IDS.pack,
+  Straw: SUPPLIER_IDS.pack,
+  "Coffee Beans": SUPPLIER_IDS.coffee,
+};
+
 function createInventoryForBranch(branchId: string): DemoInventoryItem[] {
   return [
-    { id: `${RAW_IDS.mango}-${branchId}`, branchId, name: "Mango", type: "raw", unit: "kg", currentQty: 8.5, minimumQty: 10 },
-    { id: `${RAW_IDS.milk}-${branchId}`, branchId, name: "Milk", type: "raw", unit: "L", currentQty: 6, minimumQty: 10 },
-    { id: `${RAW_IDS.sugar}-${branchId}`, branchId, name: "Sugar", type: "raw", unit: "kg", currentQty: 15, minimumQty: 5 },
-    { id: `${RAW_IDS.tea}-${branchId}`, branchId, name: "Tea", type: "raw", unit: "kg", currentQty: 4, minimumQty: 3 },
-    { id: `${RAW_IDS.pearls}-${branchId}`, branchId, name: "Pearls", type: "raw", unit: "kg", currentQty: 2, minimumQty: 5 },
-    { id: `${RAW_IDS.ice}-${branchId}`, branchId, name: "Ice", type: "raw", unit: "kg", currentQty: 20, minimumQty: 10 },
-    { id: `${RAW_IDS.cup}-${branchId}`, branchId, name: "Cup", type: "raw", unit: "pcs", currentQty: 120, minimumQty: 500 },
-    { id: `${RAW_IDS.straw}-${branchId}`, branchId, name: "Straw", type: "raw", unit: "pcs", currentQty: 80, minimumQty: 300 },
-    { id: `${RAW_IDS.coffee}-${branchId}`, branchId, name: "Coffee Beans", type: "raw", unit: "kg", currentQty: 0, minimumQty: 2 },
+    { id: `${RAW_IDS.mango}-${branchId}`, branchId, name: "Mango", type: "raw", unit: "kg", currentQty: 8.5, minimumQty: 10, supplierId: ITEM_SUPPLIER.Mango },
+    { id: `${RAW_IDS.milk}-${branchId}`, branchId, name: "Milk", type: "raw", unit: "L", currentQty: 6, minimumQty: 10, supplierId: ITEM_SUPPLIER.Milk },
+    { id: `${RAW_IDS.sugar}-${branchId}`, branchId, name: "Sugar", type: "raw", unit: "kg", currentQty: 15, minimumQty: 5, supplierId: ITEM_SUPPLIER.Sugar },
+    { id: `${RAW_IDS.tea}-${branchId}`, branchId, name: "Tea", type: "raw", unit: "kg", currentQty: 4, minimumQty: 3, supplierId: ITEM_SUPPLIER.Tea },
+    { id: `${RAW_IDS.pearls}-${branchId}`, branchId, name: "Pearls", type: "raw", unit: "kg", currentQty: 2, minimumQty: 5, supplierId: ITEM_SUPPLIER.Pearls },
+    { id: `${RAW_IDS.ice}-${branchId}`, branchId, name: "Ice", type: "raw", unit: "kg", currentQty: 20, minimumQty: 10, supplierId: ITEM_SUPPLIER.Ice },
+    { id: `${RAW_IDS.cup}-${branchId}`, branchId, name: "Cup", type: "raw", unit: "pcs", currentQty: 120, minimumQty: 500, supplierId: ITEM_SUPPLIER.Cup },
+    { id: `${RAW_IDS.straw}-${branchId}`, branchId, name: "Straw", type: "raw", unit: "pcs", currentQty: 80, minimumQty: 300, supplierId: ITEM_SUPPLIER.Straw },
+    { id: `${RAW_IDS.coffee}-${branchId}`, branchId, name: "Coffee Beans", type: "raw", unit: "kg", currentQty: 0, minimumQty: 2, supplierId: ITEM_SUPPLIER["Coffee Beans"] },
   ];
 }
 
@@ -247,6 +276,14 @@ export class DemoStore {
     { id: "cust-sarah", name: "Sarah", phone: "012-9876543", totalOrders: 24, totalSpent: 390, lastOrder: format(subDays(new Date(), 1), "dd MMM yyyy") },
     { id: "cust-david", name: "David", phone: "013-5551234", totalOrders: 20, totalSpent: 320, lastOrder: format(subDays(new Date(), 2), "dd MMM yyyy") },
     { id: "cust-emily", name: "Emily", phone: "014-7778899", totalOrders: 15, totalSpent: 245, lastOrder: format(subDays(new Date(), 3), "dd MMM yyyy") },
+  ];
+
+  suppliers: DemoSupplier[] = [
+    { id: SUPPLIER_IDS.dairy, name: "ABC Dairy", phone: "012-8881234", whatsapp: "012-8881234", notes: "Milk & ice" },
+    { id: SUPPLIER_IDS.fruit, name: "Fresh Fruit Supply", phone: "013-9876543", whatsapp: "013-9876543", notes: "Mango and seasonal fruit" },
+    { id: SUPPLIER_IDS.pack, name: "Packaging Hub", phone: "016-7778899", whatsapp: "016-7778899", notes: "Cups and straws" },
+    { id: SUPPLIER_IDS.tea, name: "Tea & Pearl Co", phone: "013-5550011", whatsapp: "013-5550011", notes: "Tea, pearls, sugar" },
+    { id: SUPPLIER_IDS.coffee, name: "Coffee Import KK", phone: "012-3450987", whatsapp: "012-3450987", notes: "Coffee beans" },
   ];
 
   orders: DemoOrder[] = [
@@ -583,6 +620,51 @@ export class DemoStore {
       });
     }
     return item;
+  }
+
+  upsertSupplier(data: {
+    id?: string;
+    name: string;
+    phone: string;
+    whatsapp?: string;
+    notes?: string;
+  }) {
+    if (data.id) {
+      const existing = this.suppliers.find((s) => s.id === data.id);
+      if (existing) {
+        existing.name = data.name;
+        existing.phone = data.phone;
+        existing.whatsapp = data.whatsapp || data.phone;
+        existing.notes = data.notes;
+        return existing;
+      }
+    }
+    const supplier: DemoSupplier = {
+      id: data.id || `sup-${Date.now()}`,
+      name: data.name,
+      phone: data.phone,
+      whatsapp: data.whatsapp || data.phone,
+      notes: data.notes,
+    };
+    this.suppliers.unshift(supplier);
+    return supplier;
+  }
+
+  assignSupplier(inventoryItemId: string, supplierId: string) {
+    const item = this.inventory.find((i) => i.id === inventoryItemId);
+    if (item) item.supplierId = supplierId || undefined;
+    return item;
+  }
+
+  assignSupplierByName(itemName: string, supplierId: string) {
+    for (const item of this.inventory) {
+      if (item.name === itemName) item.supplierId = supplierId || undefined;
+    }
+  }
+
+  getSupplier(id?: string) {
+    if (!id) return undefined;
+    return this.suppliers.find((s) => s.id === id);
   }
 }
 

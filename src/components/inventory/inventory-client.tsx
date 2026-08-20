@@ -6,6 +6,7 @@ import { formatNumber } from "@/lib/utils";
 import { AlertTriangle, PackageX, Plus, Minus } from "lucide-react";
 import { useStore } from "@/components/store-provider";
 import type { DemoInventoryItem } from "@/lib/demo-store";
+import { SupplierRestockActions } from "@/components/suppliers/restock-actions";
 
 export function InventoryClient() {
   const store = useStore();
@@ -40,10 +41,14 @@ export function InventoryClient() {
   function handleStockIn(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedItem) return;
+    const supplierName =
+      store.suppliers.find((s) => s.id === selectedItem.supplierId)?.name ||
+      "ABC Supplier";
     store.stockIn({
       branchId: selectedItem.branchId || branchId,
       inventoryItemId: selectedItem.id,
       ...stockInForm,
+      supplier: stockInForm.supplier || supplierName,
     });
     setShowStockIn(false);
   }
@@ -116,6 +121,25 @@ export function InventoryClient() {
             </button>
           </div>
         </div>
+        {(isLow || isOut) && (
+          <SupplierRestockActions
+            item={item}
+            supplier={store.suppliers.find((s) => s.id === item.supplierId)}
+            branchName={store.branches.find((b) => b.id === item.branchId)?.name}
+          />
+        )}
+        <select
+          value={item.supplierId || ""}
+          onChange={(e) => store.assignSupplier(item.id, e.target.value)}
+          className="mt-3 w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-600"
+        >
+          <option value="">No supplier</option>
+          {store.suppliers.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
       </div>
     );
   }
@@ -125,8 +149,11 @@ export function InventoryClient() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Inventory</h1>
         <p className="mt-1 text-slate-500">
-          Track raw materials and finished products
+          Track materials, restock from supplier WhatsApp, and log stock in
         </p>
+        <a href="/suppliers" className="mt-2 inline-block text-sm font-medium text-emerald-700">
+          Manage supplier numbers →
+        </a>
       </div>
 
       <div className="flex gap-2">

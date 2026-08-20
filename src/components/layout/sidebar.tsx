@@ -22,6 +22,7 @@ const navItems = [
   { href: "/orders", label: "Orders", icon: ShoppingBag },
   { href: "/bookings", label: "Bookings", icon: Calendar },
   { href: "/inventory", label: "Inventory", icon: Package },
+  { href: "/suppliers", label: "Suppliers", icon: Package },
   { href: "/products", label: "Products", icon: Coffee },
   { href: "/sales", label: "Sales", icon: BarChart3 },
   { href: "/ai", label: "AI Assistant", icon: Bot },
